@@ -19,40 +19,27 @@
  *
  */
 
-package com.yoclabo.reader;
+package com.yoclabo.reader.xml;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.yoclabo.infrastructure.Utilities.cut;
-import static com.yoclabo.infrastructure.Utilities.skip;
+import static com.yoclabo.reader.xml.infrastructure.Utilities.cut;
+import static com.yoclabo.reader.xml.infrastructure.Utilities.skip;
 
 public class NodeEntity {
 
-    private final TYPE myType;
+    private TYPE myType;
     private String nodeName;
     private String nodeValue;
     private List<AttributeEntity> attributes;
 
     public NodeEntity(String arg) {
-        if (arg.startsWith("<!--")) {
-            myType = TYPE.COMMENT;
-            parseComment(arg);
-        } else if (arg.startsWith("</")) {
-            myType = TYPE.END_ELEMENT;
-            parseNode(arg);
-        } else if (arg.startsWith("<")) {
-            if (arg.endsWith("/>")) {
-                myType = TYPE.EMPTY_ELEMENT;
-                parseEmpty(arg);
-            } else {
-                myType = TYPE.ELEMENT;
-                parseNode(arg);
-            }
-        } else {
-            myType = TYPE.TEXT;
-            parseValue(arg);
-        }
+        parseComment(arg);
+        parseEndElement(arg);
+        parseEmptyElement(arg);
+        parseElement(arg);
+        parseText(arg);
     }
 
     public String getNodeName() {
@@ -72,24 +59,63 @@ public class NodeEntity {
     }
 
     private void parseComment(String arg) {
-        nodeValue = arg.replaceAll("(<!--)(.*)(-->)", "$2").trim();
+        if (!arg.startsWith("<!--")) {
+            return;
+        }
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.COMMENT;
+        nodeValue = arg.substring(4, arg.length() - 3);
     }
 
-    private void parseNode(String arg) {
-        arg = arg.replaceAll("(<)(.+)(>)", "$2");
-        nodeName = cut(arg, " ", 0);
-        arg = skip(arg, " ", 0);
+    private void parseEndElement(String arg) {
+        if (!arg.startsWith("</")) {
+            return;
+        }
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.END_ELEMENT;
+        nodeName = arg.substring(1, arg.length() - 1);
+    }
+
+    private void parseEmptyElement(String arg) {
+        if (!arg.startsWith("<")) {
+            return;
+        }
+        if (!arg.endsWith("/>")) {
+            return;
+        }
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.EMPTY_ELEMENT;
+        arg = arg.substring(1, arg.length() - 2);
+        nodeName = cut(arg, " ");
+        arg = skip(arg, " ");
         attributes = parseAttributes(arg);
     }
 
-    private void parseEmpty(String arg) {
-        arg = arg.replaceAll("(<)(.+)(/>)", "$2");
-        nodeName = cut(arg, " ", 0);
-        arg = skip(arg, " ", 0);
+    private void parseElement(String arg) {
+        if (!arg.startsWith("<")) {
+            return;
+        }
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.ELEMENT;
+        arg = arg.substring(1, arg.length() - 1);
+        nodeName = cut(arg, " ");
+        arg = skip(arg, " ");
         attributes = parseAttributes(arg);
     }
 
-    private void parseValue(String arg) {
+    private void parseText(String arg) {
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.TEXT;
         nodeValue = arg.trim();
     }
 
@@ -99,10 +125,10 @@ public class NodeEntity {
             return ret;
         }
         do {
-            String n = cut(arg, "=\"", 0);
-            arg = skip(arg, "=\"", 0);
-            String v = cut(arg, "\"", 0);
-            arg = skip(arg, "\"", 0);
+            String n = cut(arg, "=\"");
+            arg = skip(arg, "=\"");
+            String v = cut(arg, "\"");
+            arg = skip(arg, "\"");
             AttributeEntity add = new AttributeEntity(n, v);
             ret.add(add);
         } while (0 < arg.length());

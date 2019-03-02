@@ -19,10 +19,10 @@
  *
  */
 
-package com.yoclabo.reader;
+package com.yoclabo.reader.xml;
 
-import static com.yoclabo.infrastructure.Utilities.cut;
-import static com.yoclabo.infrastructure.Utilities.skip;
+import static com.yoclabo.reader.xml.infrastructure.Utilities.cut;
+import static com.yoclabo.reader.xml.infrastructure.Utilities.skip;
 
 public class SAXReader {
 
@@ -40,9 +40,9 @@ public class SAXReader {
         NodeEntity ret;
         if (document.startsWith("<")) {
             ret = new NodeEntity(cut(document, ">", 1));
-            document = skip(document, ">", 0);
+            document = skip(document, ">");
         } else {
-            ret = new NodeEntity(cut(document, "<", 0));
+            ret = new NodeEntity(cut(document, "<"));
             document = skip(document, "<", -1);
         }
         return ret;

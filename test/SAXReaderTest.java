@@ -1,5 +1,5 @@
-import com.yoclabo.reader.NodeEntity;
-import com.yoclabo.reader.SAXReader;
+import com.yoclabo.reader.xml.NodeEntity;
+import com.yoclabo.reader.xml.SAXReader;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,7 +50,7 @@ class SAXReaderTest {
         } while (!p.isEOF());
         long endAt = System.currentTimeMillis();
         System.out.println(" ------- End ------- ");
-        System.out.println("Millisecond : " + Long.toString(endAt - startAt));
+        System.out.printf("Millisecond : %d%n", endAt - startAt);
         assertEquals(2, count_n);
         assertEquals(1, count_e);
         assertEquals(1, count_v);

@@ -1,6 +1,6 @@
 /*
  *
- * Utilities.java
+ * AttributeEntity.java
  *
  * Copyright 2019 Yuichi Yoshii
  *     吉井雄一 @ 吉井産業  you.65535.kir@gmail.com
@@ -19,26 +19,23 @@
  *
  */
 
-package com.yoclabo.infrastructure;
+package com.yoclabo.reader.xml;
 
-public class Utilities {
+public class AttributeEntity {
 
-    public static String cut(String arg, String target, int offset) {
-        int i = arg.indexOf(target);
-        if (-1 == i) {
-            return arg;
-        } else {
-            return arg.substring(0, i + offset).trim();
-        }
+    private final String attrName;
+    private final String attrValue;
+
+    public AttributeEntity(String n, String v) {
+        attrName = n;
+        attrValue = v;
     }
 
-    public static String skip(String arg, String target, int offset) {
-        int i = arg.indexOf(target);
-        if (-1 == i) {
-            return "";
-        } else {
-            return arg.substring(i + target.length() + offset).trim();
-        }
+    public String getAttrName() {
+        return attrName;
     }
 
+    public String getAttrValue() {
+        return attrValue;
+    }
 }
