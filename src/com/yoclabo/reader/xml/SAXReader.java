@@ -41,7 +41,8 @@ public class SAXReader {
         if (document.startsWith("<")) {
             ret = new NodeEntity(cut(document, ">", 1));
             document = skip(document, ">");
-        } else {
+        }
+        else {
             ret = new NodeEntity(cut(document, "<"));
             document = skip(document, "<", -1);
         }

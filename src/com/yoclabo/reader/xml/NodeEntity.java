@@ -35,6 +35,7 @@ public class NodeEntity {
     private List<AttributeEntity> attributes;
 
     public NodeEntity(String arg) {
+        parseDeclaration(arg);
         parseComment(arg);
         parseEndElement(arg);
         parseEmptyElement(arg);
@@ -56,6 +57,17 @@ public class NodeEntity {
 
     public TYPE getType() {
         return myType;
+    }
+
+    private void parseDeclaration(String arg) {
+        if (!arg.startsWith("<?xml")) {
+            return;
+        }
+        if (null != myType) {
+            return;
+        }
+        myType = TYPE.XML_DECLARATION;
+        nodeValue = arg.substring(2, arg.length() - 1);
     }
 
     private void parseComment(String arg) {
@@ -136,6 +148,7 @@ public class NodeEntity {
     }
 
     public enum TYPE {
+        XML_DECLARATION,
         ELEMENT,
         EMPTY_ELEMENT,
         END_ELEMENT,

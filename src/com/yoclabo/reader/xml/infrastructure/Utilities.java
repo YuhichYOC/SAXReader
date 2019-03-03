@@ -27,7 +27,8 @@ public class Utilities {
         int i = arg.indexOf(target);
         if (-1 == i) {
             return arg;
-        } else {
+        }
+        else {
             return arg.substring(0, i).trim();
         }
     }
@@ -36,7 +37,8 @@ public class Utilities {
         int i = arg.indexOf(target);
         if (-1 == i) {
             return arg;
-        } else {
+        }
+        else {
             return arg.substring(0, i + offset).trim();
         }
     }
@@ -45,7 +47,8 @@ public class Utilities {
         int i = arg.indexOf(target);
         if (-1 == i) {
             return "";
-        } else {
+        }
+        else {
             return arg.substring(i + target.length()).trim();
         }
     }
@@ -54,7 +57,8 @@ public class Utilities {
         int i = arg.indexOf(target);
         if (-1 == i) {
             return "";
-        } else {
+        }
+        else {
             return arg.substring(i + target.length() + offset).trim();
         }
     }
